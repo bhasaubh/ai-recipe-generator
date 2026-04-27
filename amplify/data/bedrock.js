@@ -17,7 +17,7 @@ export function request(ctx) {
               content: [
                 {
                   type: "text",
-                  text: `\n\nHuman: ${prompt}\n\nAssistant:`,
+                  text: prompt,
                 },
               ],
             },
@@ -29,8 +29,8 @@ export function request(ctx) {
   
   export function response(ctx) {
     const parsedBody = JSON.parse(ctx.result.body);
-    const res = {
-      body: parsedBody.content[0].text,
-    };
-    return res;
+    if (parsedBody.content && parsedBody.content.length > 0) {
+      return { body: parsedBody.content[0].text };
+    }
+    return { body: JSON.stringify(parsedBody) };
   }
